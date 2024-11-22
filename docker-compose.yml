@@ -1,0 +1,44 @@
+services:
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
+    environment:
+      - MSSQL_SA_PASSWORD=SuperSecretPassword#1
+      - SQLCMDPASSWORD=SuperSecretPassword#1
+      - ACCEPT_EULA=Y
+
+  servicebus:
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
+    volumes:
+      - ./servicebus-emulator.json:/ServiceBus_Emulator/ConfigFiles/Config.json
+    ports:
+      - "5672:5672"
+    environment:
+      - SQL_SERVER=database
+      - MSSQL_SA_PASSWORD=SuperSecretPassword#1
+      - ACCEPT_EULA=Y
+    depends_on:
+      - database
+
+  storage:
+    image: mcr.microsoft.com/azure-storage/azurite
+    restart: always
+    command: 'azurite --blobHost 0.0.0.0 --tableHost 0.0.0.0 --queueHost 0.0.0.0 -l data'
+    volumes:
+      - ./.azurite:/workspace
+      - ./.azurite/data:/opt/azurite/data
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+
+  function:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - servicebus
+      - storage
+    environment:
+      - AzureWebJobsStorage=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://storage:10000/devstoreaccount1;QueueEndpoint=http://storage:10001/devstoreaccount1;TableEndpoint=http://storage:10002/devstoreaccount1;
+      - ServiceBusConnection=Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;
+      - StorageConnection=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://storage:10000/devstoreaccount1;QueueEndpoint=http://storage:10001/devstoreaccount1;TableEndpoint=http://storage:10002/devstoreaccount1;
