@@ -18,9 +18,9 @@ public class FunctionAppShould : IClassFixture<FunctionAppFixture>
     {
         var message = new ToDoMessageData
         {
-            Task = $"Write Sample App | {Guid.NewGuid().ToString("D")}"
+            Task = $"Write Sample App | {Guid.NewGuid():D}"
         };
-        
+
         await _fixture.ServiceBusSender.SendMessageAsync(message.ToServiceBusMessage());
 
         var results = _fixture.TableClient.QueryAsync<ToDoTableData>($"Task eq '{message.Task}'");
