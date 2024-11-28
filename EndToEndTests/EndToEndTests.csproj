@@ -10,7 +10,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Azure.Data.Tables" Version="12.9.1" />
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.2" />
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
+        <PackageReference Include="FluentAssertions" Version="6.12.2" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
         <PackageReference Include="xunit" Version="2.5.3"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
@@ -19,5 +24,12 @@
     <ItemGroup>
         <Using Include="Xunit"/>
     </ItemGroup>
+
+    <ItemGroup>
+    <None Update="testSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>

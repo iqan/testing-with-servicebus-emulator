@@ -1,3 +1,10 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS tests
+LABEL maintainer="Iqan"
+WORKDIR /app
+COPY EndToEndTests .
+RUN dotnet build
+ENTRYPOINT sleep 60 && dotnet test
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 LABEL maintainer="Iqan"
 WORKDIR /app

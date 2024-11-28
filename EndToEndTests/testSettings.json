@@ -1,0 +1,6 @@
+{
+  "ServiceBusConnectionString": "Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;",
+  "TopicName": "mytopic",
+  "StorageConnectionString": "UseDevelopmentStorage=true",
+  "TableName": "ToDoTable"
+}

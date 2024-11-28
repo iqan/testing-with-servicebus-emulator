@@ -1,0 +1,73 @@
+/*
+using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Containers;
+using Microsoft.Extensions.Configuration;
+
+namespace EndToEndTests;
+
+public class FunctionAppShould : IDisposable
+{
+    private readonly IConfiguration _configuration;
+    private readonly List<IContainer> _containers = [];
+    
+    public FunctionAppShould()
+    {
+        _configuration = new ConfigurationBuilder()
+            .AddEnvironmentVariables()
+            .Build();
+        
+        var storageContainer = new ContainerBuilder()
+            .WithName(Guid.NewGuid().ToString("D"))
+            .WithImage("mcr.microsoft.com/azure-storage/azurite:3.33.0")
+            .Build();
+        
+        var sqlContainer = new ContainerBuilder()
+            .WithName(Guid.NewGuid().ToString("D"))
+            .WithImage("mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04")
+            .WithEnvironment("MSSQL_SA_PASSWORD", "SuperSecretPassword#1")
+            .WithEnvironment("ACCEPT_EULA", "Y")
+            .Build();
+        
+        var serviceBusContainer = new ContainerBuilder()
+            .WithName(Guid.NewGuid().ToString("D"))
+            .WithImage("mcr.microsoft.com/azure-messaging/servicebus-emulator:latest")
+            .WithEnvironment("MSSQL_SA_PASSWORD", "SuperSecretPassword#1")
+            .WithEnvironment("ACCEPT_EULA", "Y")
+            .DependsOn(sqlContainer)
+            .WithVolumeMount("./servicebus-emulator.json", "/ServiceBus_Emulator/ConfigFiles/Config.json")
+            .Build();
+
+        var functionImage = new ImageFromDockerfileBuilder()
+            .WithName("functionapp-" + Guid.NewGuid().ToString("D")[..5])
+            .Build();
+        
+        var functionContainer = new ContainerBuilder()
+            .WithName(Guid.NewGuid().ToString("D"))
+            .WithImage(functionImage)
+            .WithEnvironment("MSSQL_SA_PASSWORD", "SuperSecretPassword#1")
+            .WithEnvironment("ACCEPT_EULA", "Y")
+            .Build();
+        
+        _containers.AddRange([storageContainer, sqlContainer, serviceBusContainer]);
+
+        foreach (var container in _containers)
+        {
+            container.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+
+    [Fact]
+    public void SaveToDoItemToTable()
+    {
+
+    }
+
+    public void Dispose()
+    {
+        foreach (var container in _containers)
+        {
+            container.StopAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+}
+*/
